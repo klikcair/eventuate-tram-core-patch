@@ -14,27 +14,33 @@ buildscript {
     }
 }
 
-apply plugin: 'docker-compose'
+
+plugins {
+    id "com.google.cloud.artifactregistry.gradle-plugin" version "2.1.5"
+}
 
 allprojects {
     group = "io.eventuate.tram.core"
 }
 
 apply plugin: WaitForCdcPlugin
+apply plugin: 'docker-compose'
 apply plugin: "io.eventuate.plugins.gradle.publish.EventuatePublish"
 
 allprojects {
+
+    apply plugin: 'com.google.cloud.artifactregistry.gradle-plugin'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     repositories {
         mavenCentral()
-        
+        mavenLocal()
         jcenter()
         maven { 
             url "https://repo.spring.io/milestone" 
-            url "https://repo-temp.klikcair.com"
+            url "artifactregistry://asia-southeast2-maven.pkg.dev/digital-community-bank/mvn-public-repo"
         }
         eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
     }
